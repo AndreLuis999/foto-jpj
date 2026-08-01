@@ -120,7 +120,8 @@ class FotoTelaoApp {
         return {
             LINK_PASTA_DRIVE: saved.LINK_PASTA_DRIVE || base.LINK_PASTA_DRIVE || "COLOCAR_LINK_DA_PASTA_AQUI",
             ENABLE_QRCODE: saved.ENABLE_QRCODE !== undefined ? saved.ENABLE_QRCODE : (base.ENABLE_QRCODE !== false),
-            QRCODE_URL: saved.QRCODE_URL !== undefined ? saved.QRCODE_URL : (base.QRCODE_URL || ""),
+            // Só usa localStorage se tiver valor real, senão usa config.js
+            QRCODE_URL: (saved.QRCODE_URL && saved.QRCODE_URL.trim() !== "") ? saved.QRCODE_URL : (base.QRCODE_URL || ""),
             INTERVALO_ATUALIZACAO: saved.INTERVALO_ATUALIZACAO || base.INTERVALO_ATUALIZACAO || 5000,
             TEMPO_EXIBICAO: saved.TEMPO_EXIBICAO || base.TEMPO_EXIBICAO || 7000,
             NOME_EVENTO: saved.NOME_EVENTO || base.NOME_EVENTO || "Nosso Evento Especial",
@@ -497,21 +498,40 @@ class FotoTelaoApp {
             qrTargetUrl = `${loc.origin}${basePath}galeria.html`;
         }
 
+        console.log("[QR Code] Gerando QR Code com a URL:", qrTargetUrl);
+
         this.dom.qrBadge.classList.remove('hidden');
         this.dom.qrContainer.innerHTML = "";
 
         if (typeof QRCode !== 'undefined') {
+            // Gera em resolução alta (256x256) para garantir que qualquer câmera consiga ler
+            // O CSS da .qr-box faz o redimensionamento visual para caber no badge
             new QRCode(this.dom.qrContainer, {
                 text: qrTargetUrl,
-                width: 76,
-                height: 76,
+                width: 256,
+                height: 256,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.M
+                correctLevel: QRCode.CorrectLevel.L
             });
+
+            // Ajusta o canvas/img gerado para caber visualmente na caixa
+            setTimeout(() => {
+                const canvas = this.dom.qrContainer.querySelector('canvas');
+                const img = this.dom.qrContainer.querySelector('img');
+                if (canvas) {
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                }
+                if (img) {
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                }
+            }, 100);
         } else {
+            // Fallback: API externa de QR Code com tamanho grande
             const img = document.createElement('img');
-            img.src = `https://quickchart.io/qr?text=${encodeURIComponent(qrTargetUrl)}&size=150`;
+            img.src = `https://quickchart.io/qr?text=${encodeURIComponent(qrTargetUrl)}&size=300&margin=1`;
             img.alt = "QR Code Galeria de Fotos";
             this.dom.qrContainer.appendChild(img);
         }
