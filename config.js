@@ -15,7 +15,7 @@ const CONFIG = {
     ENABLE_QRCODE: true,
 
     // URL personalizada do QR Code (deixe vazio para gerar o link da galeria.html automaticamente)
-    QRCODE_URL: "",
+    QRCODE_URL: "https://drive.google.com/drive/folders/1UbMsncerYkazMJn0S06zGSV4aZZ9r2aC?usp=sharing",
 
     // Intervalo de verificação por novas fotos no Drive (em ms) - 5000 = 5 segundos
     INTERVALO_ATUALIZACAO: 5000,
