@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#08090c">
+    <title>Galeria de Fotos do Evento</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Configuração do Sistema -->
+    <script src="config.js"></script>
+</head>
+<body class="gallery-page-body">
+
+    <div class="gallery-wrapper">
+        <!-- Header -->
+        <header class="gallery-header">
+            <div class="gallery-logo">🖼️</div>
+            <h1 class="gallery-event-title" id="gallery-event-title">Nome do Evento</h1>
+            <p class="gallery-subtitle">Galeria de Fotos do Evento</p>
+            <div class="gallery-counter-badge" id="gallery-counter">Carregando fotos...</div>
+        </header>
+
+        <!-- Grade de Fotos -->
+        <main class="gallery-grid" id="gallery-grid">
+            <div class="gallery-loading">
+                <span class="spinner"></span>
+                <p>Buscando imagens da pasta...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Lightbox Modal de Visualização Ampliada -->
+    <div id="lightbox-modal" class="lightbox-modal hidden">
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        
+        <div class="lightbox-content">
+            <img src="" alt="Foto expandida" id="lightbox-img" class="lightbox-img">
+        </div>
+
+        <div class="lightbox-actions">
+            <button class="btn-lightbox-nav" id="btn-lightbox-prev">&larr; Anterior</button>
+            <a href="#" download target="_blank" rel="noopener noreferrer" class="btn-download-primary" id="btn-lightbox-download">
+                ⬇️ Baixar Foto
+            </a>
+            <button class="btn-lightbox-nav" id="btn-lightbox-next">Próxima &rarr;</button>
+        </div>
+    </div>
+
+    <!-- Script da Galeria -->
+    <script src="galeria.js"></script>
+</body>
+</html>

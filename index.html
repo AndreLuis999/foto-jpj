@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#08090c">
+    <title>Foto Telão - Apresentação de Fotos para Eventos</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- QRCode CDN Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Estilos Personalizados -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Configurações do Sistema -->
+    <script src="config.js"></script>
+</head>
+
+<body>
+
+    <!-- 1. Tela de Abertura / Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-card">
+            <div class="splash-logo">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m8 3a5 5 0 0 0-5 5a5 5 0 0 0 5 5a5 5 0 0 0 5-5a5 5 0 0 0-5-5m0 2a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3Z" />
+                </svg>
+            </div>
+            <h1 class="event-title" id="splash-event-title">Nome do Evento</h1>
+            <p class="event-subtitle" id="splash-event-subtitle">Preparando apresentação...</p>
+
+            <div class="splash-status">
+                <span class="spinner" id="splash-spinner"></span>
+                <span class="splash-status-text" id="splash-status-text">Conectando ao Google Drive...</span>
+            </div>
+
+            <button class="btn-start" id="btn-start-presentation" style="display: none;">
+                Iniciar Slideshow agora
+            </button>
+
+            <div class="splash-footer">
+                Dica: Pressione <kbd>F11</kbd> para alternar o modo Tela Cheia
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Container Principal do Slideshow -->
+    <main id="slideshow-container">
+        <!-- Fundo desfocado dinâmico para fotos verticais -->
+        <div class="ambient-bg" id="ambient-bg-1"></div>
+        <div class="ambient-bg" id="ambient-bg-2"></div>
+
+        <!-- Camadas duplas para transição suave de imagens (Fade) -->
+        <div class="slide-layer" id="slide-layer-1">
+            <img src="" alt="Foto do evento" class="slide-img" id="slide-img-1">
+        </div>
+        <div class="slide-layer" id="slide-layer-2">
+            <img src="" alt="Foto do evento" class="slide-img" id="slide-img-2">
+        </div>
+    </main>
+
+    <!-- 3. Indicador Discreto de Status / Toast Notification -->
+    <div id="status-toast" class="hidden">
+        <span class="toast-dot" id="toast-dot"></span>
+        <span id="toast-message">Carregando fotos...</span>
+    </div>
+
+    <!-- 4. Badge do QR Code no canto da tela (Aponta para o link da pasta do Drive ou galeria.html) -->
+    <div id="qrcode-badge" class="hidden">
+        <div class="qr-box" id="qrcode-container"></div>
+        <div class="qr-info">
+            <span class="qr-title" id="qr-title-text">📱 Gostou de alguma foto?</span>
+            <span class="qr-subtitle" id="qr-subtitle-text">Aponte a câmera e baixe a sua foto</span>
+        </div>
+    </div>
+
+    <!-- 5. Barra Flutuante de Controles -->
+    <div id="controls-bar">
+        <button class="ctrl-btn" id="btn-prev" title="Foto Anterior (Seta Esquerda)">
+            <svg viewBox="0 0 24 24">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+        </button>
+        <button class="ctrl-btn" id="btn-toggle-pause" title="Pausar / Reproduzir (Espaço)">
+            <svg id="icon-pause" viewBox="0 0 24 24">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+            </svg>
+            <svg id="icon-play" viewBox="0 0 24 24" style="display:none;">
+                <path d="M8 5v14l11-7z" />
+            </svg>
+        </button>
+        <button class="ctrl-btn" id="btn-next" title="Próxima Foto (Seta Direita)">
+            <svg viewBox="0 0 24 24">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+            </svg>
+        </button>
+
+        <div class="ctrl-divider"></div>
+
+        <button class="ctrl-btn" id="btn-fullscreen" title="Tela Cheia (F11)">
+            <svg viewBox="0 0 24 24">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+            </svg>
+        </button>
+        <button class="ctrl-btn" id="btn-open-admin" title="Painel do Evento (Teclas 'A' ou 'M')">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2a3.6 3.6 0 0 1 0 7.2z" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- 6. Modal de Administração / Configurações -->
+    <div id="admin-modal">
+        <div class="admin-card">
+            <div class="admin-header">
+                <h2 class="admin-title">Painel do Evento</h2>
+                <button class="btn-close" id="btn-close-admin">&times;</button>
+            </div>
+
+            <div class="admin-stats">
+                <div class="stat-box">
+                    <div class="stat-val" id="stat-displayed">0</div>
+                    <div class="stat-lbl">Fotos Exibidas</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val" id="stat-queued">0</div>
+                    <div class="stat-lbl">Fotos na Fila</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val" id="stat-total">0</div>
+                    <div class="stat-lbl">Total Encontradas</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="admin-drive-url">Link da Pasta Pública do Google Drive:</label>
+                <input type="text" class="form-input" id="admin-drive-url"
+                    placeholder="https://drive.google.com/drive/folders/...">
+            </div>
+
+            <div class="form-group form-checkbox-group">
+                <label class="form-checkbox-label">
+                    <input type="checkbox" id="admin-enable-qrcode" checked>
+                    <span>Exibir QR Code no canto da tela</span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="admin-qr-url">URL Personalizada do QR Code (opcional):</label>
+                <input type="text" class="form-input" id="admin-qr-url"
+                    placeholder="Deixe em branco para apontar automaticamente para galeria.html">
+            </div>
+
+            <div class="hotkeys-list">
+                <div><kbd>F11</kbd> Tela Cheia</div>
+                <div><kbd>ESC</kbd> Fechar Painel</div>
+                <div><kbd>Espaço</kbd> Pausar / Continuar</div>
+                <div><kbd>&larr;</kbd> <kbd>&rarr;</kbd> Anterior / Próxima</div>
+                <div><kbd>A</kbd> ou <kbd>M</kbd> Abrir Configurações</div>
+                <div><kbd>C</kbd> Limpar Cache Local</div>
+            </div>
+
+            <div class="admin-actions">
+                <button class="btn-secondary" id="btn-reset-cache">Limpar Cache</button>
+                <button class="btn-primary" id="btn-save-admin">Salvar e Conectar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Principal -->
+    <script src="script.js"></script>
+</body>
+
+</html>

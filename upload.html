@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#08090c">
+    <title>Envie sua Foto - Foto Telão</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Google Identity Services (OAuth 2.0) -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Configurações -->
+    <script src="config.js"></script>
+</head>
+<body class="upload-page-body">
+
+    <div class="upload-container">
+        <!-- Header -->
+        <header class="upload-header">
+            <div class="upload-logo">📸</div>
+            <h1 class="upload-event-title" id="upload-event-title">Nome do Evento</h1>
+            <p class="upload-subtitle">Envie suas fotos para aparecer no telão em tempo real!</p>
+        </header>
+
+        <!-- Card de Autenticação / Login Google -->
+        <div class="upload-card" id="auth-card">
+            <h2 class="card-title">1. Faça login com o Google</h2>
+            <p class="card-desc">Conecte sua conta Google para autorizar o envio das fotos para o evento.</p>
+            
+            <div id="google-login-box">
+                <button class="btn-google-login" id="btn-google-login">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                        <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.25 21.31 7.31 24 12 24z"/>
+                        <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.17 0 9.99 0 12s.46 3.83 1.26 5.42l4.02-3.15z"/>
+                        <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.69 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                    </svg>
+                    <span>Entrar com conta Google</span>
+                </button>
+            </div>
+
+            <!-- Perfil do Usuário Logado -->
+            <div class="user-profile-bar hidden" id="user-profile-bar">
+                <div class="user-info">
+                    <img src="" alt="Avatar" id="user-avatar" class="user-avatar">
+                    <div class="user-text">
+                        <span id="user-name" class="user-name">Usuário</span>
+                        <span id="user-email" class="user-email">email@gmail.com</span>
+                    </div>
+                </div>
+                <button class="btn-logout" id="btn-logout" title="Trocar de conta">Sair</button>
+            </div>
+        </div>
+
+        <!-- Card de Seleção e Envio de Fotos -->
+        <div class="upload-card disabled" id="upload-card">
+            <h2 class="card-title">2. Selecione suas fotos</h2>
+            <p class="card-desc">Escolha imagens da galeria ou tire uma foto agora (.jpg, .png, .webp).</p>
+
+            <div class="file-dropzone" id="dropzone">
+                <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" multiple style="display:none;">
+                <button class="btn-select-files" id="btn-select-files">
+                    📁 Selecionar Fotos
+                </button>
+                <span class="file-hint">Formatações aceitas: JPG, JPEG, PNG, WEBP</span>
+            </div>
+
+            <!-- Grid de Previews -->
+            <div class="preview-grid" id="preview-grid"></div>
+
+            <!-- Progresso de Upload -->
+            <div class="upload-progress-container hidden" id="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <span class="progress-text" id="progress-text">Enviando...</span>
+            </div>
+
+            <!-- Botão Enviar -->
+            <button class="btn-upload-submit" id="btn-upload-submit" disabled>
+                🚀 Enviar Fotos para o Telão
+            </button>
+        </div>
+
+        <!-- Tela de Agradecimento (Sucesso) -->
+        <div class="upload-card success-card hidden" id="success-card">
+            <div class="success-icon">❤️</div>
+            <h2 class="success-title">Obrigado por participar!</h2>
+            <p class="success-desc">Sua foto já foi enviada e estará no telão em instantes.</p>
+            <button class="btn-primary" id="btn-upload-more">
+                Enviar mais fotos
+            </button>
+        </div>
+    </div>
+
+    <!-- Script de Upload -->
+    <script src="upload.js"></script>
+</body>
+</html>
