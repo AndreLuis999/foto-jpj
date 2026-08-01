@@ -9,7 +9,7 @@
  */
 const CONFIG = {
     // Cole aqui o link completo da sua pasta pública do Google Drive
-    LINK_PASTA_DRIVE: "COLOCAR_LINK_DA_PASTA_AQUI",
+    LINK_PASTA_DRIVE: "https://drive.google.com/drive/folders/1UbMsncerYkazMJn0S06zGSV4aZZ9r2aC?usp=sharing",
 
     // Ativar (true) ou Desativar (false) o QR Code no telão
     ENABLE_QRCODE: true,
